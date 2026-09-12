@@ -1,0 +1,40 @@
+{
+  "name": "create-mt-app",
+  "version": "0.1.0",
+  "description": "Scaffold an Expo app with Matias's standard stack: Expo Router, NativeWind, Drizzle, Zod, i18n, RevenueCat, expo-widgets, and a rich CLAUDE.md",
+  "type": "module",
+  "bin": {
+    "create-mt-app": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "template"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  },
+  "keywords": [
+    "expo",
+    "react-native",
+    "scaffold",
+    "create-app"
+  ],
+  "author": "Matias Turra",
+  "license": "MIT"
+}

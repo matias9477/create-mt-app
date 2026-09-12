@@ -1,0 +1,20 @@
+{
+  "name": "__SLUG__",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
+    "web": "expo start --web",
+    "prebuild:ios": "npx expo prebuild --platform ios --clean && npx expo run:ios",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "db:generate": "drizzle-kit generate",
+    "release": "expo-release"
+  }
+}

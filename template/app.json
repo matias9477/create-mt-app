@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "name": "__APP_NAME__",
+    "slug": "__SLUG__",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "__SLUG__",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "owner": "__EXPO_OWNER__",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "__BUNDLE_ID__",
+      "appleTeamId": "__APPLE_TEAM_ID__",
+      "buildNumber": "1",
+      "entitlements": {
+        "com.apple.security.application-groups": ["__APP_GROUP__"]
+      },
+      "infoPlist": {
+        "CFBundleLocalizations": ["en", "es"],
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "__BUNDLE_ID__",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "__ACCENT__"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#121212"
+          }
+        }
+      ],
+      "expo-sqlite",
+      "expo-localization",
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-widgets",
+        {
+          "widgets": [
+            {
+              "name": "__FEATURE_PASCAL__",
+              "displayName": "__APP_NAME__",
+              "description": "Latest __FEATURE__ at a glance",
+              "ios": {
+                "supportedFamilies": ["systemSmall", "systemMedium"]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
