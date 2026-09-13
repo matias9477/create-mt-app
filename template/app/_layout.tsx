@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import migrations from "@/drizzle/migrations";
 import { db } from "@/src/db/client";
+import { initializeAds } from "@/src/features/ads/adsService";
 import { LanguageSync } from "@/src/features/i18n/LanguageSync";
 import { usePurchasesStore } from "@/src/features/purchases/purchasesStore";
 import { ThemeSync } from "@/src/features/theme/ThemeSync";
@@ -57,6 +58,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     usePurchasesStore.getState().initialize();
+    initializeAds();
   }, []);
 
   if (migrationError) {

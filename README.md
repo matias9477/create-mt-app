@@ -29,6 +29,7 @@ node dist/index.js "My App" --yes  # from a local checkout
 - **i18next** — en/es, `ThemeSync`/`LanguageSync`/`WidgetSync` provider pattern
 - **expo-widgets** — TSX home-screen widget (`"widget"` directive, @expo/ui/swift-ui) fed by `WidgetSync`
 - **RevenueCat** — purchases feature module, `useIsPro()`, custom paywall modal route
+- **AdMob** — `AdBanner` slot (hidden for Pro, non-personalized so no ATT prompt), test ads in dev, disabled until per-platform unit ids land in `.env`
 - **Onboarding** — skippable paged intro gated by a persisted flag, ending in a create-your-first-X CTA
 - **Reviews** — `review-prompt.ts` (happy-moment `maybeRequestReview` + Settings "Leave a review")
 - **Settings** — theme/language pickers, Pro + restore, review, privacy policy (matiasturra.dev/privacy/&lt;slug&gt;), replay onboarding, version from app.json

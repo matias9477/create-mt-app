@@ -4,7 +4,7 @@ Living roadmap. Anything under **Critical path to v1.0** has to land before v1.0
 
 ## Shipped (for reference)
 
-- Scaffolded with create-mt-app: Expo Router, NativeWind tokens, Drizzle+expo-sqlite with generated migrations, Zod+RHF forms, i18n (en/es), expo-widgets widget, RevenueCat purchases module with custom paywall, skippable onboarding, review prompts, dark mode.
+- Scaffolded with create-mt-app: Expo Router, NativeWind tokens, Drizzle+expo-sqlite with generated migrations, Zod+RHF forms, i18n (en/es), expo-widgets widget, RevenueCat purchases module with custom paywall, AdMob banner slot (test ads in dev, disabled until unit ids are configured), skippable onboarding, review prompts, dark mode.
 
 ## Critical path to v1.0
 
@@ -17,6 +17,7 @@ Living roadmap. Anything under **Critical path to v1.0** has to land before v1.0
 - [ ] Final icon + splash (replace the placeholder solid-color assets in `assets/images/`)
 - [ ] `npx eas init` run; EAS project id recorded in CLAUDE.md → App identity
 - [ ] RevenueCat: app created, products, entitlement `pro`, `default` offering; keys in `.env` + EAS env
+- [ ] AdMob: apps + banner ad units created; real app ids replace Google's samples in app.json (`react-native-google-mobile-ads` plugin, needs a rebuild); unit ids in `.env` + EAS env — **or** delete the ads module per CLAUDE.md → Ads if this app won't run ads
 - [ ] Privacy policy: `content/privacy/__SLUG__.mdx` in ~/Projects/my-portfolio, published (URL already wired in Settings)
 - [ ] store.config.json copy finalized (en-US + es-ES); `eas metadata:lint` then `eas metadata:push`
 - [ ] 4 screenshots per DESIGN.md headlines (stage states with the __DEV__ DeveloperSection; upload manually in App Store Connect — EAS metadata does not cover screenshots)

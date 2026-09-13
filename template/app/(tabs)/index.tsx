@@ -1,6 +1,7 @@
 import { Link, Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { AdBanner } from "@/src/features/ads/ad-banner";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { ListRow } from "@/src/ui/list-row";
 import { Screen } from "@/src/ui/screen";
@@ -46,6 +47,7 @@ export default function HomeScreen() {
           )}
         />
       )}
+      <AdBanner />
     </Screen>
   );
 }

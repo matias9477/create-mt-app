@@ -37,6 +37,7 @@ const EXPO_RUNTIME_PACKAGES = [
   "react-native",
   "react-native-web",
   "react-native-gesture-handler",
+  "react-native-google-mobile-ads",
   "react-native-reanimated",
   "react-native-worklets",
   "react-native-safe-area-context",

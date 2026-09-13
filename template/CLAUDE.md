@@ -139,6 +139,16 @@ Hiding a feature behind the paywall (the standard recipe):
 2. Purchase success path: `purchasePackage` → `refresh()` → `router.back()`. Always offer restore. Keep the App Store terms footer.
 3. Free tier stays useful: gate depth (unlimited entries, widget, exports), not the core loop.
 
+### Ads (AdMob)
+
+- `src/features/ads/`: `adsService.ts` is the only module touching the SDK's init API (`initializeAds()` is called once from `app/_layout.tsx`); `ad-banner.tsx` exports `AdBanner`, the mountable slot — it renders nothing for Pro users (`useIsPro()`) and when ads are unconfigured, so mount it unconditionally (Home has it at the bottom, above the tab bar).
+- **The env key is the on-switch**: ad unit ids come from `EXPO_PUBLIC_ADMOB_BANNER_IOS` / `EXPO_PUBLIC_ADMOB_BANNER_ANDROID` in `.env` (+ EAS env for builds). A platform without a key has ads silently disabled — the scaffold ships with both empty, so no ads until AdMob is set up. Shipping iOS-only ads (the usual case) = set only the iOS key.
+- **Dev builds always serve Google's test unit** (`TestIds.ADAPTIVE_BANNER`) — clicking real ads on a development device risks an AdMob account ban. Real units only ever load in release builds.
+- app.json ships **Google's sample AdMob app ids** in the `react-native-google-mobile-ads` plugin so native builds don't crash at startup before setup. Replace them with the real app ids (AdMob → App settings, `ca-app-pub-…~…`) when the AdMob apps are created — app ids bake into the native build, so changing them requires a rebuild (`npm run ios`). App id (`~`) goes in app.json; ad **unit** ids (`/`) go in `.env` — don't mix them up.
+- **Non-personalized requests only** (`requestNonPersonalizedAdsOnly: true`) — no ATT prompt, consistent with the no-tracking store position. Switching to personalized ads would require the ATT flow and privacy-label changes; don't do it casually.
+- Ads vs Pro: the banner is the free tier's trade-off and Pro removes it — mention "remove ads" in the paywall copy when ads are live.
+- If this app won't run ads: delete `src/features/ads/`, the `<AdBanner />` mount in Home, the plugin entry in app.json, and `npm uninstall react-native-google-mobile-ads`.
+
 ## Conventions
 
 - **File naming: kebab-case** (`review-prompt.ts`, `items-form.tsx`). The only PascalCase files are `*Sync.tsx` invisible providers and widget components (`ItemsWidget.tsx`).
