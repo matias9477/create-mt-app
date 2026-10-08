@@ -8,6 +8,8 @@ import type { WithSpringConfig } from "react-native-reanimated";
 export const DURATION = {
   /** Exits — leaving should be quicker than arriving. */
   exit: 160,
+  /** Field label floating up/down on focus — quick, it's feedback to typing. */
+  label: 180,
   /** Layout shifts (LinearTransition) when siblings appear/disappear. */
   layout: 220,
   /** Entrances (FadeIn*, ZoomIn). */

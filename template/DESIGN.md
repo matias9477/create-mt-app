@@ -51,7 +51,9 @@ System font. Sizes come from the type scale, not ad-hoc values:
 
 Screens are **compositions, never 700-line files**: a route file wires together components from `src/ui/` (generic primitives) and `src/features/<feature>/` (feature pieces). If a screen grows past ~150 lines, extract components. Reuse before creating; extend a primitive before forking it.
 
-Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger; press-scale + haptic built in), `Field`, `ListRow`, `ExpandableList`, `ThemeRoot`, plus `usePressScale()` and the motion tokens in `motion.ts`.
+Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger; press-scale + haptic built in), `Field` (floating label), `ListRow`, `ExpandableList`, `TabStack`, `ThemeRoot`, plus `usePressScale()` and the motion tokens in `motion.ts`.
+
+- **Forms use floating labels**: every text input is a `Field`. The label sits inside the box like a placeholder and floats up to a small title on focus or once filled; `placeholder` is only a hint shown while focused and empty. Never stack a separate title above an input — it makes forms past ~3 fields long and heavy.
 
 - **Data states**: every component backed by async data renders all of loading / error / empty — never a blank region. Empty states say what to do next.
 - **Long lists**: a collection inside a scrolling screen goes through `ExpandableList` (view more/less) or pagination — screens must not become infinite.

@@ -48,11 +48,11 @@ export default function OnboardingScreen() {
   const finish = (startCreating: boolean) => {
     if (onboardingDone) {
       if (router.canGoBack()) router.back();
-      else router.replace("/(tabs)");
+      else router.replace("/");
       return;
     }
     setOnboardingDone(true);
-    router.replace("/(tabs)");
+    router.replace("/");
     if (startCreating) router.push("/__FEATURE__/new");
   };
 

@@ -5,7 +5,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import migrations from "@/drizzle/migrations";
@@ -30,7 +30,8 @@ function RootStack() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: c.surfaceCard },
+        // iOS: no fill, so the header is the native liquid-glass bar.
+        ...(Platform.OS === "ios" ? {} : { headerStyle: { backgroundColor: c.surfaceCard } }),
         headerTintColor: c.textPrimary,
         contentStyle: { backgroundColor: c.surfacePage },
       }}

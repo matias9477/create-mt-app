@@ -1,9 +1,14 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect } from "expo-router";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useTranslation } from "react-i18next";
 import { usePreferencesStore } from "@/src/stores/preferences";
 import { useThemeColors } from "@/src/ui/theme-colors";
 
+/**
+ * Native tab bar (UITabBarController / Material bottom nav) — on iOS 26 this is
+ * the floating liquid-glass bar. Don't set backgroundColor: it kills the glass.
+ * Each tab is a folder with its own TabStack so it gets a native header.
+ */
 export default function TabsLayout() {
   const { t } = useTranslation();
   const c = useThemeColors();
@@ -14,26 +19,26 @@ export default function TabsLayout() {
   }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: c.accentFg,
-        tabBarInactiveTintColor: c.textTertiary,
-      }}
+    <NativeTabs
+      tintColor={c.accentFg}
+      labelStyle={{ default: { color: c.textTertiary }, selected: { color: c.accentFg } }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: t("tabs.home"),
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: t("tabs.settings"),
-          tabBarIcon: ({ color, size }) => <Ionicons name="settings" color={color} size={size} />,
-        }}
-      />
-    </Tabs>
+      <NativeTabs.Trigger name="(home)">
+        <NativeTabs.Trigger.Label>{t("tabs.home")}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: "house", selected: "house.fill" }}
+          md="home"
+          selectedColor={c.accentFg}
+        />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings">
+        <NativeTabs.Trigger.Label>{t("tabs.settings")}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: "gearshape", selected: "gearshape.fill" }}
+          md="settings"
+          selectedColor={c.accentFg}
+        />
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

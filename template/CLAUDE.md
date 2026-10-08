@@ -58,6 +58,7 @@ Cross-cutting invisible providers are `*-sync.tsx` files exporting a PascalCase 
 ### Routing / UI
 
 - `app/` is expo-router (typed routes on). Route files stay **thin** — logic lives in `src/features/*`, shared primitives in `src/ui/`.
+- **Navigation is native, liquid glass on iOS 26** (pattern from game7). `app/(tabs)/_layout.tsx` uses `NativeTabs` (`expo-router/unstable-native-tabs`) with SF Symbol icons — never the JS `Tabs`. Each tab is a folder (`(home)/`, `settings/`) whose `_layout.tsx` renders `TabStack` (`src/ui/tab-stack.tsx`: native Stack, large title, transparent header on iOS). Header actions are `Stack.Toolbar` + `Stack.Toolbar.Button icon="<sf symbol>"` declared in the page, not custom `headerRight` views. **Never give the tab bar or an iOS header a backgroundColor** — a solid fill turns the glass off. Scroll views and lists set `contentInsetAdjustmentBehavior="automatic"` (`Screen` does) so content clears the floating bars without hardcoded padding.
 - **Screens are compositions, never monoliths.** A screen is multiple reused components, not one 700-line file. Extract past ~150 lines; reuse an existing primitive or feature component before writing a new one (inventory in DESIGN.md).
 - Styling is **NativeWind v4 semantic tokens only** — no hex in components, no `StyleSheet.create`, no raw pixel values in `style={{}}` (spacing comes from the Tailwind scale; the few allowed exceptions are listed in DESIGN.md). Imperative color props (navigation options, `placeholderTextColor`, icon colors) come from `useThemeColors()`.
 - The palette lives in THREE synced places: `global.css`, `src/ui/theme-colors.ts`, and the THEME constant inside each widget file.
@@ -74,7 +75,7 @@ Cross-cutting invisible providers are `*-sync.tsx` files exporting a PascalCase 
 - **Onboarding** (`app/onboarding.tsx`): paged intro, **skippable at all times**, ends with a call-to-action that creates the user's first __FEATURE__. Gated by the persisted `onboardingDone` flag in `(tabs)/_layout.tsx`; revisitable from Settings. Keep it to 3–4 slides of basic information.
 - **Accounts**: this template has none, but if account creation is ever added, a **delete account** flow (Settings row → confirm → server-side deletion, see shotbook's `delete-account` edge function for the model) must ship in the same release. App Store review requires it, and so do we.
 
-### Settings screen (`app/(tabs)/settings.tsx`)
+### Settings screen (`app/(tabs)/settings/index.tsx`)
 
 Standard sections every app keeps: Appearance (theme), Language, Feel (haptics toggle), Pro (paywall entry + restore purchases), About — **Leave a review**, **Privacy policy**, replay onboarding — and the **app version** read from app.json via `Constants.expoConfig?.version` (never hardcode it).
 
