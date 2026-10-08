@@ -53,7 +53,7 @@ Each feature owns, by consistent filename:
 - `<feature>-form.tsx` — react-hook-form + `zodResolver`, typed `useForm<FormIn, unknown, FormOut>` with `z.input<>`/`z.output<>`.
 - Extra presentational pieces in kebab-case files.
 
-Cross-cutting invisible providers are PascalCase `*Sync.tsx` components returning `null` (`ThemeSync`, `LanguageSync`, `HapticsSync`, `WidgetSync`), mounted once in `app/_layout.tsx`.
+Cross-cutting invisible providers are `*-sync.tsx` files exporting a PascalCase component that returns `null` (`ThemeSync`, `LanguageSync`, `HapticsSync`, `WidgetSync`), mounted once in `app/_layout.tsx`.
 
 ### Routing / UI
 
@@ -66,7 +66,7 @@ Cross-cutting invisible providers are PascalCase `*Sync.tsx` components returnin
 
 ### UX rules (apply to every new screen/flow)
 
-- **Data states**: any component rendering async/db-backed data implements all three of loading, error (with retry where it makes sense), and empty (saying what to do next). A blank region is a bug.
+- **Data states**: any component rendering async/db-backed data implements all three of loading, error (with retry where it makes sense), and empty (saying what to do next). A blank region is a bug. Render them with `LoadingState` / `ErrorState` / `EmptyState` from `src/ui/state-views.tsx` (Home and the detail screen are the reference).
 - **Long lists**: collections inside scrolling screens go through `src/ui/expandable-list.tsx` (view more/less) or pagination — screens must not scroll forever because one section is huge.
 - **Cancellability**: every multi-step workflow offers cancel/back to the previous state at ANY point — one tap, not ten back-presses. Modals are dismissible; destructive exits from dirty forms get a confirm.
 - **Destructive actions**: irreversible operations get a confirm, and where feasible an undo path (e.g. an "un-mark" affordance) so a mistap is recoverable without support email.
@@ -152,7 +152,7 @@ Rules learned the hard way in `since` (`src/utils/notifications.ts` there is the
 
 ### Purchases / Paywall (RevenueCat)
 
-- `src/features/purchases/`: `purchasesService.ts` is the only module importing `react-native-purchases`; `purchasesStore.ts` holds `isReady/isPro/customerInfo`; gate features with the `useIsPro()` selector, never the whole store.
+- `src/features/purchases/`: `purchases-service.ts` is the only module importing `react-native-purchases`; `purchases-store.ts` holds `isReady/isPro/customerInfo`; gate features with the `useIsPro()` selector, never the whole store.
 - Keys come from `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` in `.env`. The Pro entitlement id is `PRO_ENTITLEMENT_ID` in `types.ts` and must match the RevenueCat dashboard.
 - `app/paywall.tsx` is a custom paywall (modal route) over `getCurrentOffering()`. User-cancelled purchases are not errors (`isUserCancelled`).
 
@@ -170,7 +170,7 @@ Hiding a feature behind the paywall (the standard recipe):
 
 ### Ads (AdMob)
 
-- `src/features/ads/`: `adsService.ts` is the only module touching the SDK's init API (`initializeAds()` is called once from `app/_layout.tsx`); `ad-banner.tsx` exports `AdBanner`, the mountable slot — it renders nothing for Pro users (`useIsPro()`) and when ads are unconfigured, so mount it unconditionally (Home has it at the bottom, above the tab bar).
+- `src/features/ads/`: `ads-service.ts` is the only module touching the SDK's init API (`initializeAds()` is called once from `app/_layout.tsx`); `ad-banner.tsx` exports `AdBanner`, the mountable slot — it renders nothing for Pro users (`useIsPro()`) and when ads are unconfigured, so mount it unconditionally (Home has it at the bottom, above the tab bar).
 - **The env key is the on-switch**: ad unit ids come from `EXPO_PUBLIC_ADMOB_BANNER_IOS` / `EXPO_PUBLIC_ADMOB_BANNER_ANDROID` in `.env` (+ EAS env for builds). A platform without a key has ads silently disabled — the scaffold ships with both empty, so no ads until AdMob is set up. Shipping iOS-only ads (the usual case) = set only the iOS key.
 - **Dev builds always serve Google's test unit** (`TestIds.ADAPTIVE_BANNER`) — clicking real ads on a development device risks an AdMob account ban. Real units only ever load in release builds.
 - app.json ships **Google's sample AdMob app ids** in the `react-native-google-mobile-ads` plugin so native builds don't crash at startup before setup. Replace them with the real app ids (AdMob → App settings, `ca-app-pub-…~…`) when the AdMob apps are created — app ids bake into the native build, so changing them requires a rebuild (`npm run ios`). App id (`~`) goes in app.json; ad **unit** ids (`/`) go in `.env` — don't mix them up.
@@ -180,7 +180,7 @@ Hiding a feature behind the paywall (the standard recipe):
 
 ## Conventions
 
-- **File naming: kebab-case** (`review-prompt.ts`, `items-form.tsx`). The only PascalCase files are `*Sync.tsx` invisible providers and widget components (`ItemsWidget.tsx`).
+- **File naming: kebab-case, no exceptions** (`review-prompt.ts`, `items-form.tsx`, `theme-sync.tsx`, `purchases-store.ts`, `items-widget.tsx`). Component and hook *names* inside stay PascalCase/camelCase; only file names are kebab. Why: macOS is case-insensitive but git and Linux CI are not, so a case-only rename can pass locally and break the build elsewhere — all-lowercase names can't hit that.
 - TypeScript strict incl. `noUncheckedIndexedAccess`; single path alias `@/*` → repo root (imports read `@/src/...`, `@/widgets/...`).
 - Lint/format: Biome only (`biome.json`: 100 cols, double quotes). Run `npm run lint:fix` before committing.
 - Tests cover **pure logic only** (zod schemas, `src/lib`, services) in colocated `__tests__/` folders — no component snapshot tests.

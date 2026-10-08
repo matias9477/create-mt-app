@@ -25,7 +25,9 @@ export function Screen({ children, scroll = true, className = "" }: ScreenProps)
   return (
     <ScrollView
       className={`flex-1 bg-surface-page ${className}`}
-      contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}
+      contentContainerClassName="p-4"
+      // Runtime safe-area value — the one allowed numeric style (DESIGN.md).
+      contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       keyboardShouldPersistTaps="handled"
     >
       {children}

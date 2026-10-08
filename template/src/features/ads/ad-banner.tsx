@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-import { useIsPro } from "@/src/features/purchases/purchasesStore";
-import { ADS_ENABLED, BANNER_AD_UNIT_ID } from "./adsService";
+import { useIsPro } from "@/src/features/purchases/purchases-store";
+import { ADS_ENABLED, BANNER_AD_UNIT_ID } from "./ads-service";
 
 /**
  * Adaptive banner anchored at the bottom of a screen. Renders nothing for Pro

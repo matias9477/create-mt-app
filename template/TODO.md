@@ -34,6 +34,7 @@ Living roadmap. Anything under **Critical path to v1.0** has to land before v1.0
 ## Known issues / tech debt
 
 - Items here carry removal instructions written the moment the scaffolding is added (e.g. "remove X before v1.0 ships").
+- `plugins/with-scene-lifecycle.js` ports SDK 58's UIScene life cycle to SDK 57 — without it, apps built with Xcode 27 crash at launch ("UIScene life cycle is required"). **Remove it (file + `app.json` plugins entry) when upgrading to Expo SDK 58**, which ships this natively.
 
 ## Tone of voice
 

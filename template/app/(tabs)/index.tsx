@@ -1,18 +1,19 @@
 import { Link, Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Text, View } from "react-native";
+import { Text } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { AdBanner } from "@/src/features/ads/ad-banner";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { ListRow } from "@/src/ui/list-row";
 import { DURATION } from "@/src/ui/motion";
 import { Screen } from "@/src/ui/screen";
+import { EmptyState, ErrorState, LoadingState } from "@/src/ui/state-views";
 import { useThemeColors } from "@/src/ui/theme-colors";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const c = useThemeColors();
-  const { data, isLoading } = useAll__FEATURE_PASCAL__();
+  const { data, isLoading, error } = useAll__FEATURE_PASCAL__();
 
   return (
     <Screen scroll={false}>
@@ -28,10 +29,10 @@ export default function HomeScreen() {
           ),
         }}
       />
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={c.accentFg} />
-        </View>
+      {error ? (
+        <ErrorState />
+      ) : isLoading ? (
+        <LoadingState />
       ) : (
         <Animated.FlatList
           data={data}
@@ -39,11 +40,7 @@ export default function HomeScreen() {
           itemLayoutAnimation={LinearTransition.duration(DURATION.layout)}
           keyExtractor={(item) => String(item.id)}
           contentContainerClassName="py-2"
-          ListEmptyComponent={
-            <View className="flex-1 items-center justify-center px-8 pt-24">
-              <Text className="text-center text-base text-text-tertiary">{t("home.empty")}</Text>
-            </View>
-          }
+          ListEmptyComponent={<EmptyState message={t("home.empty")} />}
           renderItem={({ item }) => (
             <Link href={{ pathname: "/__FEATURE__/[id]", params: { id: String(item.id) } }} asChild>
               <ListRow title={item.title} subtitle={item.notes ?? undefined} onPress={() => {}} />

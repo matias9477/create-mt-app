@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
-import __FEATURE_PASCAL__Widget from "@/widgets/__FEATURE_PASCAL__Widget";
+import __FEATURE_PASCAL__Widget from "@/widgets/__FEATURE__-widget";
 
 /**
  * Invisible provider: pushes the latest __FEATURE__ into the home-screen
@@ -25,7 +25,7 @@ export function WidgetSync(): null {
         hasData: latest !== undefined,
       });
     } catch (error) {
-      console.error("[widgets/WidgetSync] snapshot update failed", error);
+      console.error("[widgets/widget-sync] snapshot update failed", error);
     }
   }, [data, t]);
 

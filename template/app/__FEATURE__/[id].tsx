@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Alert, Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import {
   delete__FEATURE_PASCAL__,
   update__FEATURE_PASCAL__,
@@ -10,13 +10,14 @@ import { __FEATURE_PASCAL__Form } from "@/src/features/__FEATURE__/__FEATURE__-f
 import { haptics } from "@/src/features/haptics/haptics";
 import { Button } from "@/src/ui/button";
 import { Screen } from "@/src/ui/screen";
+import { EmptyState, ErrorState, LoadingState } from "@/src/ui/state-views";
 
 export default function __FEATURE_PASCAL__DetailScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const id = Number(params.id);
-  const { row, isLoading } = use__FEATURE_PASCAL__ById(id);
+  const { row, isLoading, error } = use__FEATURE_PASCAL__ById(id);
 
   function confirmDelete() {
     Alert.alert(t("detail.deleteConfirmTitle"), t("detail.deleteConfirmMessage"), [
@@ -32,16 +33,26 @@ export default function __FEATURE_PASCAL__DetailScreen() {
     ]);
   }
 
+  if (error) {
+    return (
+      <Screen scroll={false}>
+        <ErrorState />
+      </Screen>
+    );
+  }
+
   if (isLoading) {
-    return <Screen scroll={false}>{null}</Screen>;
+    return (
+      <Screen scroll={false}>
+        <LoadingState />
+      </Screen>
+    );
   }
 
   if (!row) {
     return (
       <Screen scroll={false}>
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-base text-text-tertiary">{t("detail.notFound")}</Text>
-        </View>
+        <EmptyState message={t("detail.notFound")} />
       </Screen>
     );
   }

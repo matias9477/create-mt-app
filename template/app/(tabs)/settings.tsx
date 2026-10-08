@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Alert, Switch, Text, View } from "react-native";
 import { DeveloperSection } from "@/src/features/dev/developer-section";
 import { haptics } from "@/src/features/haptics/haptics";
-import { useIsPro, usePurchasesStore } from "@/src/features/purchases/purchasesStore";
+import { useIsPro, usePurchasesStore } from "@/src/features/purchases/purchases-store";
 import { requestReviewExplicitly } from "@/src/lib/review-prompt";
 import {
   type LanguagePreference,

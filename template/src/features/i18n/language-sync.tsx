@@ -13,7 +13,7 @@ export function LanguageSync(): null {
     const target = languagePreference === "system" ? systemLanguage() : languagePreference;
     if (i18n.language !== target) {
       i18n.changeLanguage(target).catch((error) => {
-        console.error("[i18n/LanguageSync] changeLanguage failed", error);
+        console.error("[i18n/language-sync] changeLanguage failed", error);
       });
     }
   }, [languagePreference]);

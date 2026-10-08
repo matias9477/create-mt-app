@@ -6,7 +6,7 @@ import {
   getCustomerInfo,
   hasProEntitlement,
   restorePurchases,
-} from "./purchasesService";
+} from "./purchases-service";
 
 interface PurchasesState {
   isReady: boolean;

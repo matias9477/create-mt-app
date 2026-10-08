@@ -7,8 +7,8 @@ import {
   getCurrentOffering,
   isUserCancelled,
   purchasePackage,
-} from "@/src/features/purchases/purchasesService";
-import { usePurchasesStore } from "@/src/features/purchases/purchasesStore";
+} from "@/src/features/purchases/purchases-service";
+import { usePurchasesStore } from "@/src/features/purchases/purchases-store";
 import { Button } from "@/src/ui/button";
 import { Card } from "@/src/ui/card";
 import { Screen } from "@/src/ui/screen";
