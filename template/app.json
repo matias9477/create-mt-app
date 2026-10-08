@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "__SLUG__",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "owner": "__EXPO_OWNER__",
     "ios": {
       "supportsTablet": true,
@@ -27,8 +26,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "__ACCENT__"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "output": "static",

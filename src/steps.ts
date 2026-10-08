@@ -43,7 +43,15 @@ const EXPO_RUNTIME_PACKAGES = [
   "react-native-screens",
 ];
 
-const EXPO_DEV_PACKAGES = ["jest", "jest-expo", "@types/react", "typescript", "babel-preset-expo"];
+// @types/jest must match the jest major jest-expo pins — @latest outruns it.
+const EXPO_DEV_PACKAGES = [
+  "jest",
+  "jest-expo",
+  "@types/jest",
+  "@types/react",
+  "typescript",
+  "babel-preset-expo",
+];
 
 /**
  * Pure-JS, or native libs outside the Expo SDK map that track RN compatibility
@@ -68,7 +76,6 @@ const NPM_LATEST_DEPS = [
 
 const NPM_LATEST_DEV = [
   "@biomejs/biome",
-  "@types/jest",
   "drizzle-kit",
   "tailwindcss@^3",
   "babel-plugin-inline-import",
