@@ -13,20 +13,12 @@ import {
   type ThemePreference,
   usePreferencesStore,
 } from "@/src/stores/preferences";
-import { Card } from "@/src/ui/card";
 import { ListRow } from "@/src/ui/list-row";
+import { ListSection } from "@/src/ui/list-section";
 import { Screen } from "@/src/ui/screen";
 import { useThemeColors } from "@/src/ui/theme-colors";
 
 const PRIVACY_POLICY_URL = "https://www.matiasturra.dev/privacy/__SLUG__";
-
-function SectionTitle({ children }: { children: string }) {
-  return (
-    <Text className="mb-2 mt-6 px-1 text-sm font-semibold uppercase tracking-wide text-text-tertiary">
-      {children}
-    </Text>
-  );
-}
 
 function Check({ visible }: { visible: boolean }) {
   return visible ? <Text className="text-base font-bold text-accent-fg">✓</Text> : null;
@@ -80,8 +72,7 @@ export default function SettingsScreen() {
 
   return (
     <Screen>
-      <SectionTitle>{t("settings.appearance")}</SectionTitle>
-      <Card className="overflow-hidden p-0">
+      <ListSection title={t("settings.appearance")}>
         {themeOptions.map((option) => (
           <ListRow
             key={option.value}
@@ -93,10 +84,9 @@ export default function SettingsScreen() {
             right={<Check visible={themePreference === option.value} />}
           />
         ))}
-      </Card>
+      </ListSection>
 
-      <SectionTitle>{t("settings.language")}</SectionTitle>
-      <Card className="overflow-hidden p-0">
+      <ListSection title={t("settings.language")}>
         {languageOptions.map((option) => (
           <ListRow
             key={option.value}
@@ -108,10 +98,9 @@ export default function SettingsScreen() {
             right={<Check visible={languagePreference === option.value} />}
           />
         ))}
-      </Card>
+      </ListSection>
 
-      <SectionTitle>{t("settings.feel")}</SectionTitle>
-      <Card className="overflow-hidden p-0">
+      <ListSection title={t("settings.feel")}>
         <ListRow
           title={t("settings.haptics")}
           subtitle={t("settings.hapticsCaption")}
@@ -124,10 +113,9 @@ export default function SettingsScreen() {
             />
           }
         />
-      </Card>
+      </ListSection>
 
-      <SectionTitle>{t("settings.pro")}</SectionTitle>
-      <Card className="overflow-hidden p-0">
+      <ListSection title={t("settings.pro")}>
         <ListRow
           title={isPro ? t("settings.proActive") : t("settings.proInactive")}
           {...(!isPro && {
@@ -139,21 +127,17 @@ export default function SettingsScreen() {
           title={restoring ? t("common.loading") : t("settings.restorePurchases")}
           onPress={() => void onRestore()}
         />
-      </Card>
+      </ListSection>
 
-      <SectionTitle>{t("settings.about")}</SectionTitle>
-      <Card className="overflow-hidden p-0">
-        <ListRow
-          title={t("settings.leaveReview")}
-          onPress={() => void requestReviewExplicitly()}
-        />
+      <ListSection title={t("settings.about")}>
+        <ListRow title={t("settings.leaveReview")} onPress={() => void requestReviewExplicitly()} />
         <ListRow title={t("settings.privacyPolicy")} onPress={openPrivacyPolicy} />
         <ListRow title={t("settings.viewOnboarding")} onPress={() => router.push("/onboarding")} />
-      </Card>
+      </ListSection>
 
       <DeveloperSection />
 
-      <View className="mt-8 items-center">
+      <View className="mt-2 items-center">
         <Text className="text-sm text-text-tertiary">
           {t("settings.version")} {version}
         </Text>

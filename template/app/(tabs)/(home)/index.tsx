@@ -1,5 +1,6 @@
 import { Link, Stack, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { AdBanner } from "@/src/features/ads/ad-banner";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
@@ -7,6 +8,14 @@ import { ListRow } from "@/src/ui/list-row";
 import { DURATION } from "@/src/ui/motion";
 import { Screen } from "@/src/ui/screen";
 import { EmptyState, ErrorState, LoadingState } from "@/src/ui/state-views";
+
+function RowSeparator() {
+  return (
+    <View className="bg-surface-card">
+      <View className="ml-4 h-px bg-border-hairline" />
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -34,12 +43,20 @@ export default function HomeScreen() {
           itemLayoutAnimation={LinearTransition.duration(DURATION.layout)}
           keyExtractor={(item) => String(item.id)}
           contentInsetAdjustmentBehavior="automatic"
-          contentContainerClassName="py-2"
+          contentContainerClassName="p-4"
           ListEmptyComponent={<EmptyState message={t("home.empty")} />}
-          renderItem={({ item }) => (
-            <Link href={{ pathname: "/__FEATURE__/[id]", params: { id: String(item.id) } }} asChild>
-              <ListRow title={item.title} subtitle={item.notes ?? undefined} onPress={() => {}} />
-            </Link>
+          // Same inset-grouped look as ListSection: one rounded card, inset hairlines.
+          ItemSeparatorComponent={RowSeparator}
+          renderItem={({ item, index }) => (
+            <View
+              className={`overflow-hidden bg-surface-card ${index === 0 ? "rounded-t-2xl" : ""} ${
+                index === (data?.length ?? 0) - 1 ? "rounded-b-2xl" : ""
+              }`}
+            >
+              <Link href={{ pathname: "/__FEATURE__/[id]", params: { id: String(item.id) } }} asChild>
+                <ListRow title={item.title} subtitle={item.notes ?? undefined} onPress={() => {}} />
+              </Link>
+            </View>
           )}
         />
       )}

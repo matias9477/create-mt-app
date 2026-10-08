@@ -30,7 +30,8 @@ Adding a color = adding a **token** in all three places, then using it by name. 
 Use the Tailwind spacing scale through classNames (`p-4`, `gap-3`, `mt-6`); never numeric pixel values in `style={{}}`. Allowed exceptions, kept rare and commented: values that must be computed at runtime (safe-area insets, screen-width paging) and native props that only accept numbers (icon `size`).
 
 - Screen padding: `p-4` (16)
-- Card padding: `p-4`; row padding: `px-4 py-3.5`
+- Card padding: `p-4` (`Card padded={false}` to drop it — never a `p-0` className override); row padding: `px-4 py-3`, min height 44pt
+- Lists of rows (settings, item lists) are **inset-grouped**: `ListSection` = small uppercase caption + one borderless rounded card, rows edge to edge, inset hairlines only *between* rows
 - Vertical rhythm between sections: `mt-6`
 - Radii: `rounded-xl` inputs/buttons, `rounded-2xl` cards, `rounded-full` dots/avatars
 
@@ -51,7 +52,7 @@ System font. Sizes come from the type scale, not ad-hoc values:
 
 Screens are **compositions, never 700-line files**: a route file wires together components from `src/ui/` (generic primitives) and `src/features/<feature>/` (feature pieces). If a screen grows past ~150 lines, extract components. Reuse before creating; extend a primitive before forking it.
 
-Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger; press-scale + haptic built in), `Field` (floating label), `ListRow`, `ExpandableList`, `TabStack`, `ThemeRoot`, plus `usePressScale()` and the motion tokens in `motion.ts`.
+Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger; press-scale + haptic built in), `Field` (floating label), `ListSection` + `ListRow`, `ExpandableList`, `TabStack`, `ThemeRoot`, plus `usePressScale()` and the motion tokens in `motion.ts`.
 
 - **Forms use floating labels**: every text input is a `Field`. The label sits inside the box like a placeholder and floats up to a small title on focus or once filled; `placeholder` is only a hint shown while focused and empty. Never stack a separate title above an input — it makes forms past ~3 fields long and heavy.
 

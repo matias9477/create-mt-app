@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Alert, Switch, Text } from "react-native";
+import { Alert, Switch } from "react-native";
 import { db } from "@/src/db/client";
 import { __FEATURE__ } from "@/src/db/schema";
-import { haptics, hapticsAvailable, setHapticSoundSimulation } from "@/src/features/haptics/haptics";
+import {
+  haptics,
+  hapticsAvailable,
+  setHapticSoundSimulation,
+} from "@/src/features/haptics/haptics";
 import { usePreferencesStore } from "@/src/stores/preferences";
-import { Card } from "@/src/ui/card";
 import { ListRow } from "@/src/ui/list-row";
+import { ListSection } from "@/src/ui/list-section";
 
 /**
  * __DEV__-only tools for staging UI states (App Store screenshots, empty
@@ -46,18 +50,14 @@ export function DeveloperSection() {
 
   return (
     <>
-      <Text className="mb-2 mt-6 px-1 text-sm font-semibold uppercase tracking-wide text-text-tertiary">
-        Developer (dev builds only)
-      </Text>
-      <Card className="overflow-hidden p-0">
+      <ListSection title="Developer (dev builds only)">
         <ListRow title="Reset onboarding flag" onPress={resetOnboarding} />
         <ListRow title="Delete all __FEATURE__ (stage empty states)" onPress={deleteAll} />
-      </Card>
+      </ListSection>
 
-      <Text className="mb-2 mt-6 px-1 text-sm font-semibold uppercase tracking-wide text-text-tertiary">
-        Haptics {hapticsAvailable() ? "" : "(native module missing — rebuild)"}
-      </Text>
-      <Card className="overflow-hidden p-0">
+      <ListSection
+        title={`Haptics${hapticsAvailable() ? "" : " (native module missing — rebuild)"}`}
+      >
         <ListRow
           title="Audible simulation"
           subtitle="Plays a tone per haptic — for the iOS simulator"
@@ -66,7 +66,7 @@ export function DeveloperSection() {
         {Object.entries(haptics).map(([name, play]) => (
           <ListRow key={name} title={`Play: ${name}`} onPress={play} />
         ))}
-      </Card>
+      </ListSection>
     </>
   );
 }
