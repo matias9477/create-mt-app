@@ -93,7 +93,7 @@ export function StartHere() {
           <Animated.View
             key={guide.label}
             entering={FadeInDown.duration(DURATION.enter).delay(DURATION.stagger * (4 + i))}
-            className="w-24 items-center"
+            className="w-28 items-center"
           >
             <View className="h-14 w-14 items-center justify-center rounded-2xl bg-surface-card">
               <Ionicons name={guide.icon} size={24} color={c.textSecondary} />

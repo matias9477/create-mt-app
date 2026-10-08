@@ -30,23 +30,23 @@ Adding a color = adding a **token** in all three places, then using it by name. 
 Use the Tailwind spacing scale through classNames (`p-4`, `gap-3`, `mt-6`); never numeric pixel values in `style={{}}`. Allowed exceptions, kept rare and commented: values that must be computed at runtime (safe-area insets, screen-width paging) and native props that only accept numbers (icon `size`).
 
 - Screen padding: `p-4` (16)
-- Card padding: `p-4` (`Card padded={false}` to drop it — never a `p-0` className override); row padding: `px-4 py-3`, min height 44pt
+- Card padding: `p-4` (`Card padded={false}` to drop it — never a `p-0` className override); rows: fixed `h-14` (56pt) with or without a subtitle, `px-4`, one line each for title and subtitle
 - Lists of rows (settings, item lists) are **inset-grouped**: `ListSection` = small uppercase caption + one borderless rounded card, rows edge to edge, inset hairlines only *between* rows
 - Vertical rhythm between sections: `mt-6`
 - Radii: `rounded-xl` inputs/buttons, `rounded-2xl` cards, `rounded-full` dots/avatars
 
 ## Typography
 
-System font. Sizes come from the type scale, not ad-hoc values:
+System font. Sizes come from the type scale, not ad-hoc values. `text-xs/sm/base` are remapped in `tailwind.config.js` to the iOS text styles (footnote 13 / subhead 15 / body 17) so in-app text matches the native headers and tab bar; don't put Tailwind's 12/14/16 back.
 
-| className | Role |
-|---|---|
-| `text-3xl font-bold` | Screen/hero titles |
-| `text-base font-semibold` | Buttons, emphasized rows |
-| `text-base` | Body, row titles |
-| `text-sm` | Labels, secondary info, errors |
-| `text-sm font-semibold uppercase tracking-wide` | Section titles (see `SectionTitle`) |
-| `text-xs` | Legal/footnotes |
+| className | Size | Role |
+|---|---|---|
+| `text-3xl font-bold` | 30 | Hero titles (screen titles are the native header) |
+| `text-base font-semibold` | 17 | Buttons, emphasized rows |
+| `text-base` | 17 | Body, row titles, inputs |
+| `text-sm` | 15 | Row subtitles, secondary info, errors |
+| `text-xs font-medium uppercase tracking-wide` | 13 | Section captions (`ListSection`) |
+| `text-xs` | 13 | Footers, legal, small labels |
 
 ## Components
 

@@ -5,6 +5,14 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      // iOS text styles (body 17 / subhead 15 / footnote 13) instead of
+      // Tailwind's web defaults (16 / 14 / 12), so in-app text matches the
+      // native headers and tab bar. Components keep using text-base/sm/xs.
+      fontSize: {
+        xs: ["13px", { lineHeight: "18px" }],
+        sm: ["15px", { lineHeight: "20px" }],
+        base: ["17px", { lineHeight: "22px" }],
+      },
       colors: {
         // Semantic tokens only — values live as CSS variables in global.css
         // and at runtime in src/ui/theme-colors.ts. Keep all three in sync.

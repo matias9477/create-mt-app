@@ -13,7 +13,9 @@ interface ListRowProps {
 
 /**
  * One row of a ListSection (or a grouped list). No border or background of
- * its own — the section draws the card and the separators.
+ * its own — the section draws the card and the separators. Fixed 56pt height
+ * with or without a subtitle, so lists stay even: title and subtitle are one
+ * line each — keep subtitles short (longer explanations go in the section footer).
  */
 export function ListRow({ title, subtitle, onPress, right }: ListRowProps) {
   const c = useThemeColors();
@@ -21,10 +23,16 @@ export function ListRow({ title, subtitle, onPress, right }: ListRowProps) {
     right ??
     (onPress ? <Ionicons name="chevron-forward" size={18} color={c.textTertiary} /> : null);
   const content = (
-    <View className="min-h-11 flex-row items-center justify-between px-4 py-3">
+    <View className="h-14 flex-row items-center justify-between px-4">
       <View className="mr-3 flex-1">
-        <Text className="text-base text-text-primary">{title}</Text>
-        {subtitle ? <Text className="mt-0.5 text-sm text-text-tertiary">{subtitle}</Text> : null}
+        <Text numberOfLines={1} className="text-base text-text-primary">
+          {title}
+        </Text>
+        {subtitle ? (
+          <Text numberOfLines={1} className="text-sm text-text-tertiary">
+            {subtitle}
+          </Text>
+        ) : null}
       </View>
       {trailing}
     </View>
