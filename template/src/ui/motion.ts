@@ -18,6 +18,8 @@ export const DURATION = {
   fill: 520,
   /** Stagger step between list items on first appearance. */
   stagger: 60,
+  /** One half of a slow idle "breathe" loop — placeholders/decoration only, Reduce Motion off. */
+  breathe: 1400,
 } as const;
 
 export const SPRING = {

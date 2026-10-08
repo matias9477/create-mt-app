@@ -34,6 +34,7 @@ Living roadmap. Anything under **Critical path to v1.0** has to land before v1.0
 ## Known issues / tech debt
 
 - Items here carry removal instructions written the moment the scaffolding is added (e.g. "remove X before v1.0 ships").
+- Home's empty state is the create-mt-app `StartHere` placeholder (dev builds only). When you build Home: delete `src/ui/start-here.tsx` and the `__DEV__ ? <StartHere /> :` branch in `app/(tabs)/(home)/index.tsx`, leaving `EmptyState` (with real copy in `home.empty`) as the empty state.
 - `plugins/with-scene-lifecycle.js` ports SDK 58's UIScene life cycle to SDK 57 — without it, apps built with Xcode 27 crash at launch ("UIScene life cycle is required"). **Remove it (file + `app.json` plugins entry) when upgrading to Expo SDK 58**, which ships this natively.
 
 ## Tone of voice

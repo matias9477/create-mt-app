@@ -7,6 +7,7 @@ import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { ListRow } from "@/src/ui/list-row";
 import { DURATION } from "@/src/ui/motion";
 import { Screen } from "@/src/ui/screen";
+import { StartHere } from "@/src/ui/start-here";
 import { EmptyState, ErrorState, LoadingState } from "@/src/ui/state-views";
 
 function RowSeparator() {
@@ -44,7 +45,10 @@ export default function HomeScreen() {
           keyExtractor={(item) => String(item.id)}
           contentInsetAdjustmentBehavior="automatic"
           contentContainerClassName="p-4"
-          ListEmptyComponent={<EmptyState message={t("home.empty")} />}
+          // PLACEHOLDER: <StartHere /> is create-mt-app's "get started" screen (dev
+          // builds only). When you build Home, delete it + src/ui/start-here.tsx
+          // and keep EmptyState as the real empty state.
+          ListEmptyComponent={__DEV__ ? <StartHere /> : <EmptyState message={t("home.empty")} />}
           // Same inset-grouped look as ListSection: one rounded card, inset hairlines.
           ItemSeparatorComponent={RowSeparator}
           renderItem={({ item, index }) => (

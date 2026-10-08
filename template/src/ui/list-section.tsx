@@ -1,4 +1,4 @@
-import { Children, Fragment, type ReactNode } from "react";
+import { Children, Fragment, isValidElement, type ReactNode } from "react";
 import { Text, View } from "react-native";
 
 interface ListSectionProps {
@@ -24,8 +24,8 @@ export function ListSection({ title, footer, children }: ListSectionProps) {
       ) : null}
       <View className="overflow-hidden rounded-2xl bg-surface-card">
         {rows.map((row, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: rows are static children, order is the identity
-          <Fragment key={i}>
+          // Children.toArray gives every row a stable key (".0", ".1", or the row's own).
+          <Fragment key={isValidElement(row) ? row.key : String(row)}>
             {i > 0 ? <View className="ml-4 h-px bg-border-hairline" /> : null}
             {row}
           </Fragment>
