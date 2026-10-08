@@ -17,7 +17,6 @@ const EXPO_RUNTIME_PACKAGES = [
   "expo-constants",
   "expo-crypto",
   "expo-font",
-  "expo-haptics",
   "expo-image",
   "expo-linking",
   "expo-localization",
@@ -46,7 +45,10 @@ const EXPO_RUNTIME_PACKAGES = [
 
 const EXPO_DEV_PACKAGES = ["jest", "jest-expo", "@types/react", "typescript", "babel-preset-expo"];
 
-/** Pure-JS (or RevenueCat, which tracks its own RN compatibility) — always latest. */
+/**
+ * Pure-JS, or native libs outside the Expo SDK map that track RN compatibility
+ * themselves (RevenueCat, Pulsar) — always latest.
+ */
 const NPM_LATEST_DEPS = [
   "drizzle-orm",
   "zod",
@@ -59,6 +61,9 @@ const NPM_LATEST_DEPS = [
   "date-fns",
   "react-native-purchases",
   "react-native-purchases-ui",
+  // Haptics (Software Mansion). Replaces expo-haptics: named rich presets,
+  // preloading, a global enable switch, and worklet-callable from Reanimated.
+  "react-native-pulsar",
 ];
 
 const NPM_LATEST_DEV = [

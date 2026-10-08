@@ -7,6 +7,7 @@ import {
   use__FEATURE_PASCAL__ById,
 } from "@/src/features/__FEATURE__/queries";
 import { __FEATURE_PASCAL__Form } from "@/src/features/__FEATURE__/__FEATURE__-form";
+import { haptics } from "@/src/features/haptics/haptics";
 import { Button } from "@/src/ui/button";
 import { Screen } from "@/src/ui/screen";
 
@@ -24,6 +25,7 @@ export default function __FEATURE_PASCAL__DetailScreen() {
         text: t("common.delete"),
         style: "destructive",
         onPress: () => {
+          haptics.destructive();
           void delete__FEATURE_PASCAL__(id).then(() => router.back());
         },
       },
@@ -52,6 +54,7 @@ export default function __FEATURE_PASCAL__DetailScreen() {
         submitLabel={t("form.update")}
         onSubmit={async (values) => {
           await update__FEATURE_PASCAL__(id, values);
+          haptics.success();
           router.back();
         }}
       />

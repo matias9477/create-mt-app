@@ -51,11 +51,31 @@ System font. Sizes come from the type scale, not ad-hoc values:
 
 Screens are **compositions, never 700-line files**: a route file wires together components from `src/ui/` (generic primitives) and `src/features/<feature>/` (feature pieces). If a screen grows past ~150 lines, extract components. Reuse before creating; extend a primitive before forking it.
 
-Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger), `Field`, `ListRow`, `ExpandableList`, `ThemeRoot`.
+Current primitives (`src/ui/`): `Screen`, `Card`, `Button` (primary/secondary/danger; press-scale + haptic built in), `Field`, `ListRow`, `ExpandableList`, `ThemeRoot`, plus `usePressScale()` and the motion tokens in `motion.ts`.
 
 - **Data states**: every component backed by async data renders all of loading / error / empty — never a blank region. Empty states say what to do next.
 - **Long lists**: a collection inside a scrolling screen goes through `ExpandableList` (view more/less) or pagination — screens must not become infinite.
 - **Safe areas**: full-screen surfaces and modals use safe-area insets (`Screen` handles it; custom overlays use `SafeAreaView`/`useSafeAreaInsets`) so nothing sits under the clock or the home indicator.
+
+## Motion & feel
+
+Motion and haptics are part of the design system, like color: tokens in `src/ui/motion.ts`, intents in `src/features/haptics/haptics.ts`. Rules of thumb:
+
+| Situation | Motion | Haptic |
+|---|---|---|
+| Press on a button | `usePressScale()` spring (0.96) | `press` on press-in |
+| Choice / page change | `LinearTransition` on the indicator | `tick` |
+| Toggle on / off | `withTiming` color/scale, `DURATION.layout` | `toggleOn` / `toggleOff` |
+| Item added / removed | `entering` FadeIn/FadeInDown, `exiting` FadeOut, list `itemLayoutAnimation` | — (or `success` on save) |
+| Save / create landed | — | `success` |
+| Destructive confirmed | `exiting` FadeOutLeft | `destructive` on confirm |
+| Big moment (goal reached) | one-shot flash / pop, fired on the transition | `celebrate`, delayed to the visual peak |
+
+- **Every moment is a pair**: when something important happens, the animation and the haptic land on the same beat (`useMomentHaptic(..., delay)` matches the animation's peak).
+- **Hierarchy**: small touches get small feedback; save rich presets and flashy effects for the 1–3 moments that define this app. If everything celebrates, nothing does.
+- **Quiet idle**: no ambient loops on resting screens unless they signal "live" state — and those honor Reduce Motion.
+- **Durations**: exits `DURATION.exit` (160ms) < layout `DURATION.layout` (220ms) < entrances `DURATION.enter` (260ms); fills/counters `DURATION.fill` (520ms). Nothing interactive waits on an animation to finish.
+- **Accessibility**: Reduce Motion → static fallbacks; the haptics toggle in Settings → Feel silences every haptic.
 
 ## Dark mode
 

@@ -13,6 +13,8 @@ interface PreferencesState {
   setLanguagePreference: (value: LanguagePreference) => void;
   onboardingDone: boolean;
   setOnboardingDone: (value: boolean) => void;
+  hapticsEnabled: boolean;
+  setHapticsEnabled: (value: boolean) => void;
 }
 
 /**
@@ -29,6 +31,8 @@ export const usePreferencesStore = create<PreferencesState>()(
       setLanguagePreference: (value) => set({ languagePreference: value }),
       onboardingDone: false,
       setOnboardingDone: (value) => set({ onboardingDone: value }),
+      hapticsEnabled: true,
+      setHapticsEnabled: (value) => set({ hapticsEnabled: value }),
     }),
     { name: "preferences", storage: createJSONStorage(() => AsyncStorage) },
   ),

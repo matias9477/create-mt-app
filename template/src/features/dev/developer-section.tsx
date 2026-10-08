@@ -1,6 +1,8 @@
-import { Alert, Text } from "react-native";
+import { useState } from "react";
+import { Alert, Switch, Text } from "react-native";
 import { db } from "@/src/db/client";
 import { __FEATURE__ } from "@/src/db/schema";
+import { haptics, hapticsAvailable, setHapticSoundSimulation } from "@/src/features/haptics/haptics";
 import { usePreferencesStore } from "@/src/stores/preferences";
 import { Card } from "@/src/ui/card";
 import { ListRow } from "@/src/ui/list-row";
@@ -13,8 +15,14 @@ import { ListRow } from "@/src/ui/list-row";
  */
 export function DeveloperSection() {
   const setOnboardingDone = usePreferencesStore((s) => s.setOnboardingDone);
+  const [hapticSound, setHapticSound] = useState(false);
 
   if (!__DEV__) return null;
+
+  function toggleHapticSound(next: boolean) {
+    setHapticSound(next);
+    setHapticSoundSimulation(next);
+  }
 
   function resetOnboarding() {
     setOnboardingDone(false);
@@ -44,6 +52,20 @@ export function DeveloperSection() {
       <Card className="overflow-hidden p-0">
         <ListRow title="Reset onboarding flag" onPress={resetOnboarding} />
         <ListRow title="Delete all __FEATURE__ (stage empty states)" onPress={deleteAll} />
+      </Card>
+
+      <Text className="mb-2 mt-6 px-1 text-sm font-semibold uppercase tracking-wide text-text-tertiary">
+        Haptics {hapticsAvailable() ? "" : "(native module missing — rebuild)"}
+      </Text>
+      <Card className="overflow-hidden p-0">
+        <ListRow
+          title="Audible simulation"
+          subtitle="Plays a tone per haptic — for the iOS simulator"
+          right={<Switch value={hapticSound} onValueChange={toggleHapticSound} />}
+        />
+        {Object.entries(haptics).map(([name, play]) => (
+          <ListRow key={name} title={`Play: ${name}`} onPress={play} />
+        ))}
       </Card>
     </>
   );

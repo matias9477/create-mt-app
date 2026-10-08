@@ -11,9 +11,12 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { haptics } from "@/src/features/haptics/haptics";
 import { usePreferencesStore } from "@/src/stores/preferences";
 import { Button } from "@/src/ui/button";
+import { DURATION } from "@/src/ui/motion";
 import { useThemeColors } from "@/src/ui/theme-colors";
 
 type SlideIcon = keyof typeof Ionicons.glyphMap;
@@ -62,7 +65,9 @@ export default function OnboardingScreen() {
   };
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setPage(Math.round(e.nativeEvent.contentOffset.x / width));
+    const next = Math.round(e.nativeEvent.contentOffset.x / width);
+    if (next !== page) haptics.tick();
+    setPage(next);
   };
 
   return (
@@ -100,9 +105,10 @@ export default function OnboardingScreen() {
       <View className="gap-6 px-8 pb-6">
         <View className="flex-row items-center justify-center gap-2.5">
           {SLIDES.map((slide, i) => (
-            <View
+            <Animated.View
               key={slide.key}
-              className={`h-2.5 w-2.5 rounded-full ${i === page ? "bg-accent-fg" : "bg-border-hairline"}`}
+              layout={LinearTransition.duration(DURATION.layout)}
+              className={`h-2.5 rounded-full ${i === page ? "w-6 bg-accent-fg" : "w-2.5 bg-border-hairline"}`}
             />
           ))}
         </View>

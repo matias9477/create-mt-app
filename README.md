@@ -30,6 +30,8 @@ node dist/index.js "My App" --yes  # from a local checkout
 - **expo-widgets** — TSX home-screen widget (`"widget"` directive, @expo/ui/swift-ui) fed by `WidgetSync`
 - **RevenueCat** — purchases feature module, `useIsPro()`, custom paywall modal route
 - **AdMob** — `AdBanner` slot (hidden for Pro, non-personalized so no ATT prompt), test ads in dev, disabled until per-platform unit ids land in `.env`
+- **Reanimated 4 motion** — `src/ui/motion.ts` duration/spring tokens, `usePressScale()` on `Button`, animated list layout and onboarding page dots, Reduce Motion rules
+- **Pulsar haptics** — `src/features/haptics/` intent vocabulary (press/tick/toggle/success/destructive/celebrate) over `react-native-pulsar`, safe lazy native-module probe, `useMomentHaptic`, `HapticsSync` + Settings → Feel toggle, dev sampler + simulator sound, jest mock wired
 - **Onboarding** — skippable paged intro gated by a persisted flag, ending in a create-your-first-X CTA
 - **Reviews** — `review-prompt.ts` (happy-moment `maybeRequestReview` + Settings "Leave a review")
 - **Settings** — theme/language pickers, Pro + restore, review, privacy policy (matiasturra.dev/privacy/&lt;slug&gt;), replay onboarding, version from app.json

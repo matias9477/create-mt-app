@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import migrations from "@/drizzle/migrations";
 import { db } from "@/src/db/client";
 import { initializeAds } from "@/src/features/ads/adsService";
+import { HapticsSync } from "@/src/features/haptics/HapticsSync";
 import { LanguageSync } from "@/src/features/i18n/LanguageSync";
 import { usePurchasesStore } from "@/src/features/purchases/purchasesStore";
 import { ThemeSync } from "@/src/features/theme/ThemeSync";
@@ -81,6 +82,7 @@ export default function RootLayout() {
         <ErrorBoundary>
           <ThemeSync />
           <LanguageSync />
+          <HapticsSync />
           <WidgetSync />
           <RootStack />
           <StatusBar style="auto" />

@@ -3,8 +3,9 @@ import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Text, View } from "react-native";
+import { Alert, Switch, Text, View } from "react-native";
 import { DeveloperSection } from "@/src/features/dev/developer-section";
+import { haptics } from "@/src/features/haptics/haptics";
 import { useIsPro, usePurchasesStore } from "@/src/features/purchases/purchasesStore";
 import { requestReviewExplicitly } from "@/src/lib/review-prompt";
 import {
@@ -15,6 +16,7 @@ import {
 import { Card } from "@/src/ui/card";
 import { ListRow } from "@/src/ui/list-row";
 import { Screen } from "@/src/ui/screen";
+import { useThemeColors } from "@/src/ui/theme-colors";
 
 const PRIVACY_POLICY_URL = "https://www.matiasturra.dev/privacy/__SLUG__";
 
@@ -37,6 +39,9 @@ export default function SettingsScreen() {
   const setThemePreference = usePreferencesStore((s) => s.setThemePreference);
   const languagePreference = usePreferencesStore((s) => s.languagePreference);
   const setLanguagePreference = usePreferencesStore((s) => s.setLanguagePreference);
+  const hapticsEnabled = usePreferencesStore((s) => s.hapticsEnabled);
+  const setHapticsEnabled = usePreferencesStore((s) => s.setHapticsEnabled);
+  const c = useThemeColors();
   const isPro = useIsPro();
   const restore = usePurchasesStore((s) => s.restore);
   const [restoring, setRestoring] = useState(false);
@@ -52,6 +57,13 @@ export default function SettingsScreen() {
     { value: "en", label: t("settings.languageEnglish") },
     { value: "es", label: t("settings.languageSpanish") },
   ];
+
+  function onToggleHaptics(next: boolean) {
+    setHapticsEnabled(next);
+    // HapticsSync applies the toggle on the next effect — sample just after it,
+    // so turning haptics on is felt immediately.
+    if (next) setTimeout(haptics.toggleOn, 80);
+  }
 
   async function onRestore() {
     setRestoring(true);
@@ -74,7 +86,10 @@ export default function SettingsScreen() {
           <ListRow
             key={option.value}
             title={option.label}
-            onPress={() => setThemePreference(option.value)}
+            onPress={() => {
+              haptics.tick();
+              setThemePreference(option.value);
+            }}
             right={<Check visible={themePreference === option.value} />}
           />
         ))}
@@ -86,10 +101,29 @@ export default function SettingsScreen() {
           <ListRow
             key={option.value}
             title={option.label}
-            onPress={() => setLanguagePreference(option.value)}
+            onPress={() => {
+              haptics.tick();
+              setLanguagePreference(option.value);
+            }}
             right={<Check visible={languagePreference === option.value} />}
           />
         ))}
+      </Card>
+
+      <SectionTitle>{t("settings.feel")}</SectionTitle>
+      <Card className="overflow-hidden p-0">
+        <ListRow
+          title={t("settings.haptics")}
+          subtitle={t("settings.hapticsCaption")}
+          right={
+            <Switch
+              value={hapticsEnabled}
+              onValueChange={onToggleHaptics}
+              trackColor={{ true: c.accentFg }}
+              accessibilityLabel={t("settings.haptics")}
+            />
+          }
+        />
       </Card>
 
       <SectionTitle>{t("settings.pro")}</SectionTitle>

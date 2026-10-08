@@ -1,5 +1,8 @@
 import { ActivityIndicator, Pressable, Text } from "react-native";
+import Animated from "react-native-reanimated";
+import { haptics } from "@/src/features/haptics/haptics";
 import { useThemeColors } from "./theme-colors";
+import { usePressScale } from "./use-press-scale";
 
 type Variant = "primary" | "secondary" | "danger";
 
@@ -31,20 +34,29 @@ export function Button({
   loading = false,
 }: ButtonProps) {
   const c = useThemeColors();
+  const press = usePressScale();
   return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled || loading}
-      onPress={onPress}
-      className={`min-h-12 items-center justify-center rounded-xl px-4 py-3 active:opacity-80 ${
-        containerClasses[variant]
-      } ${disabled ? "opacity-40" : ""}`}
-    >
-      {loading ? (
-        <ActivityIndicator color={variant === "primary" ? c.accentOn : c.textPrimary} />
-      ) : (
-        <Text className={`text-base font-semibold ${labelClasses[variant]}`}>{label}</Text>
-      )}
-    </Pressable>
+    <Animated.View style={press.style}>
+      <Pressable
+        accessibilityRole="button"
+        disabled={disabled || loading}
+        onPress={onPress}
+        onPressIn={() => {
+          press.handlers.onPressIn();
+          // Danger buttons open a confirm — the destructive haptic fires on confirm, not here.
+          if (variant !== "danger") haptics.press();
+        }}
+        onPressOut={press.handlers.onPressOut}
+        className={`min-h-12 items-center justify-center rounded-xl px-4 py-3 active:opacity-80 ${
+          containerClasses[variant]
+        } ${disabled ? "opacity-40" : ""}`}
+      >
+        {loading ? (
+          <ActivityIndicator color={variant === "primary" ? c.accentOn : c.textPrimary} />
+        ) : (
+          <Text className={`text-base font-semibold ${labelClasses[variant]}`}>{label}</Text>
+        )}
+      </Pressable>
+    </Animated.View>
   );
 }

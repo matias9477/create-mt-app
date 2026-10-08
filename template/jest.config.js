@@ -18,6 +18,8 @@ module.exports = {
   // Mirror the tsconfig "@/*" path alias — jest doesn't read tsconfig paths.
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
+    // No native module on Node — Pulsar ships a no-op jest.fn() mock.
+    "^react-native-pulsar$": "react-native-pulsar/jest-mock",
   },
   transformIgnorePatterns,
   collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!src/**/__tests__/**"],

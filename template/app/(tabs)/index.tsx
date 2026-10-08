@@ -1,9 +1,11 @@
 import { Link, Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import { AdBanner } from "@/src/features/ads/ad-banner";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { ListRow } from "@/src/ui/list-row";
+import { DURATION } from "@/src/ui/motion";
 import { Screen } from "@/src/ui/screen";
 import { useThemeColors } from "@/src/ui/theme-colors";
 
@@ -31,8 +33,10 @@ export default function HomeScreen() {
           <ActivityIndicator color={c.accentFg} />
         </View>
       ) : (
-        <FlatList
+        <Animated.FlatList
           data={data}
+          // Rows slide into place when one is added/deleted instead of jumping.
+          itemLayoutAnimation={LinearTransition.duration(DURATION.layout)}
           keyExtractor={(item) => String(item.id)}
           contentContainerClassName="py-2"
           ListEmptyComponent={

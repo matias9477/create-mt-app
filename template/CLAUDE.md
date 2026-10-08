@@ -53,7 +53,7 @@ Each feature owns, by consistent filename:
 - `<feature>-form.tsx` — react-hook-form + `zodResolver`, typed `useForm<FormIn, unknown, FormOut>` with `z.input<>`/`z.output<>`.
 - Extra presentational pieces in kebab-case files.
 
-Cross-cutting invisible providers are PascalCase `*Sync.tsx` components returning `null` (`ThemeSync`, `LanguageSync`, `WidgetSync`), mounted once in `app/_layout.tsx`.
+Cross-cutting invisible providers are PascalCase `*Sync.tsx` components returning `null` (`ThemeSync`, `LanguageSync`, `HapticsSync`, `WidgetSync`), mounted once in `app/_layout.tsx`.
 
 ### Routing / UI
 
@@ -76,7 +76,7 @@ Cross-cutting invisible providers are PascalCase `*Sync.tsx` components returnin
 
 ### Settings screen (`app/(tabs)/settings.tsx`)
 
-Standard sections every app keeps: Appearance (theme), Language, Pro (paywall entry + restore purchases), About — **Leave a review**, **Privacy policy**, replay onboarding — and the **app version** read from app.json via `Constants.expoConfig?.version` (never hardcode it).
+Standard sections every app keeps: Appearance (theme), Language, Feel (haptics toggle), Pro (paywall entry + restore purchases), About — **Leave a review**, **Privacy policy**, replay onboarding — and the **app version** read from app.json via `Constants.expoConfig?.version` (never hardcode it).
 
 `src/features/dev/developer-section.tsx` renders at the bottom in `__DEV__` builds only: preview-state tools (reset onboarding, empty the data) for staging App Store screenshots and testing flows. English-only copy — it never ships. Add new dev tools there, gated in that one place.
 
@@ -102,6 +102,35 @@ Every app has a published privacy policy before release:
 - Widget sync must never break the app — keep it wrapped in try/catch.
 - Widget name, families, and configuration parameters live in app.json under the `expo-widgets` plugin; changing their *shape* needs a new native build (`npm run ios`), only values are runtime-settable.
 - Deep links use `widgetURL("__SLUG__://...")`, matching the app `scheme`.
+
+### Motion (Reanimated)
+
+`react-native-reanimated` (v4, with `react-native-worklets`) is the only animation library — no `Animated` from `react-native`, no Lottie for UI feedback. Its babel plugin is auto-configured by `babel-preset-expo`; don't add it to `babel.config.js`.
+
+- **Tokens, not numbers**: durations and springs come from `src/ui/motion.ts` (`DURATION.*`, `SPRING.*`). A new kind of motion = a new token, same as colors.
+- **Prefer declarative over hand-rolled.** In order: layout animations (`layout={LinearTransition.duration(DURATION.layout)}`, `entering={FadeInDown.duration(DURATION.enter)}`, `exiting={FadeOut.duration(DURATION.exit)}`), then `useSharedValue` + `useAnimatedStyle` + `withTiming/withSpring/withSequence/withDelay/withRepeat`. Lists use `Animated.FlatList` + `itemLayoutAnimation` so rows glide when one is added or removed.
+- **Shared values**: read/write with `.get()` / `.set()` (React Compiler-safe — it's on in this app); never read a shared value during render. Drive them from `useEffect` on a prop change, or from gesture/press handlers.
+- **Animate transform and opacity only** (`scale`, `translateX/Y`, `opacity`). For widths, animate a `scaleX` or a measured `translateX` (`onLayout` once), not `width`. Color changes go through `interpolateColor` with token colors from `useThemeColors()`.
+- **One-shot moments fire on transitions, never on mount**: keep a `useRef` of the previous value and only animate when it flips false→true (see game7's `MomentFlash`/`ProgressBar` pattern). Opening a screen on an already-reached state must be still.
+- **Exits are faster than entrances** (`DURATION.exit` < `DURATION.enter`); stagger list entrances with `.delay(i * DURATION.stagger)` and cap it (first ~8 items).
+- **Keep a fixed footprint**: animated content that swaps (counters, badges) renders an invisible "ghost" copy to reserve size, so the layout around it never jumps.
+- **Reduce Motion is mandatory** for anything looping or ambient: `useReducedMotion()` → hold a static state (or render `null` for pure decoration). One-shot entrances can stay; infinite `withRepeat` cannot.
+- Press feel: wrap pressables in `Animated.View` + `usePressScale()` (`src/ui/use-press-scale.ts`) — `Button` already does. Don't stack it on top of `active:opacity-*` for the same element beyond what `Button` does.
+- Reusable effects become primitives in `src/ui/` (`use-press-scale.ts`, future `rolling-number.tsx`, `use-blink.ts`), not copy-pasted per screen. Restraint: motion marks state changes and moments; it is never decoration on idle screens.
+
+### Haptics (Pulsar)
+
+`react-native-pulsar` (Software Mansion) is the haptics engine — **not** `expo-haptics`. It's a native module: adding it (or updating it) needs a new dev-client build (`npm run ios`).
+
+- **Only `src/features/haptics/haptics.ts` imports `react-native-pulsar`.** It lazy-requires the module after probing `TurboModuleRegistry.get("RNPulsar")`, because Pulsar's entry throws at import time when the native module isn't in the binary (old dev client, Expo Go, web). Never `import { Presets } from "react-native-pulsar"` anywhere else.
+- **Call intents, never presets**: components call `haptics.press()`, `haptics.tick()`, `haptics.toggleOn/Off()`, `haptics.destructive()`, `haptics.success()`, `haptics.warning()`, `haptics.celebrate()`. Need a new feel? Add a named intent (domain words: `streakKept`, `goalReached`) mapped to a preset there. Keep the vocabulary small.
+- **Rich presets** (`Presets.bloom()`, `Presets.cleave()` …) are for real moments only; touches use `Presets.System.*`. Every rich preset an intent uses goes in `PRELOAD` (PascalCase names) so its first play lands on the beat. Audition presets in the free Pulsar app on a physical device.
+- **Touch haptics live next to the touch**: fire on `onPressIn` for presses (it should coincide with the scale-down), on the commit for choices (`tick` on picker select / pager page change), and `destructive` on the *confirm* of a destructive alert — not on the button that opens it.
+- **Moment haptics derive from state, in one place**: a null-rendering component mounted once in `app/_layout.tsx` uses `useMomentHaptic(active, haptics.x, delayMs)` (fires on false→true only, silent while data is `null`/loading and on mount). Tab screens stay mounted, so firing from screens double-buzzes. Use `delay` to land the buzz on the animation's visual peak.
+- **Tone**: warm on wins, at most one soft signal on failure, never a punishing or repeated buzz. No haptic on scroll, on every keystroke, or on passive data updates.
+- **User control**: the persisted `hapticsEnabled` preference (Settings → Feel) is applied by `HapticsSync` via `Settings.enableHaptics()` — one global switch, so call sites never check it.
+- **Simulator**: haptics don't play there; DeveloperSection has an "Audible simulation" switch (`Settings.enableSound`) and a sampler row per intent. It's off by default — never leave it on.
+- Tests: jest maps `react-native-pulsar` to `react-native-pulsar/jest-mock` (no-op `jest.fn()`s), so modules that import haptics stay testable.
 
 ### i18n
 
