@@ -2,6 +2,10 @@
 
 Scaffold an Expo app with my standard stack in one command — always on the **latest** package versions (nothing is pinned in the template; `expo install` resolves SDK-compatible versions at scaffold time), with a rich `CLAUDE.md` so AI-assisted work follows the house conventions from the first prompt.
 
+<p align="center">
+  <img src="docs/base-app.png" alt="A freshly scaffolded app: Home's dev-only get-started placeholder under a liquid-glass header and tab bar" width="280">
+</p>
+
 ## Usage
 
 ```bash
@@ -30,6 +34,9 @@ node dist/index.js "My App" --yes  # from a local checkout
 - **expo-widgets** — TSX home-screen widget (`"widget"` directive, @expo/ui/swift-ui) fed by `WidgetSync`
 - **RevenueCat** — purchases feature module, `useIsPro()`, custom paywall modal route
 - **AdMob** — `AdBanner` slot (hidden for Pro, non-personalized so no ATT prompt), test ads in dev, disabled until per-platform unit ids land in `.env`
+- **Native navigation** — `NativeTabs` liquid-glass tab bar (iOS 26), a native stack per tab with inline titles, header actions as native `Stack.Toolbar` buttons
+- **UI primitives** — floating-label `Field`, inset-grouped `ListSection`/`ListRow`, `Card`, `Button`, `Screen`, loading/error/empty state views
+- **Get-started Home** — animated dev-only placeholder as Home's empty state ("edit `app/(tabs)/(home)/index.tsx`"); swap in `EmptyState` when you build the screen
 - **Reanimated 4 motion** — `src/ui/motion.ts` duration/spring tokens, `usePressScale()` on `Button`, animated list layout and onboarding page dots, Reduce Motion rules
 - **Pulsar haptics** — `src/features/haptics/` intent vocabulary (press/tick/toggle/success/destructive/celebrate) over `react-native-pulsar`, safe lazy native-module probe, `useMomentHaptic`, `HapticsSync` + Settings → Feel toggle, dev sampler + simulator sound, jest mock wired
 - **Onboarding** — skippable paged intro gated by a persisted flag, ending in a create-your-first-X CTA
@@ -39,6 +46,22 @@ node dist/index.js "My App" --yes  # from a local checkout
 - **EAS + expo-release** — build profiles, `store.config.json` (en-US/es-ES)
 - **CLAUDE.md + DESIGN.md** — the full convention spec (data states, cancellability, kebab-case, composition over monolith screens, safe areas, expandable lists) and the design-system token contract (incl. voice & tone + App Store screenshot headlines), including the RevenueCat/paywall recipe
 - **Shipping workflow** — `docs/spec-template.md` (spec-first development), `TODO.md` living roadmap (easiest→hardest phases, early Pro pivot, app-store readiness checklist), `AGENTS.md` pinned to the installed SDK's docs, ErrorBoundary, `__DEV__` DeveloperSection for screenshot staging, `skills-lock.json`, `.claude/settings.json` (expo plugin), and the no-analytics-by-design position
+
+## Guidelines baked in
+
+Spelled out in the generated `CLAUDE.md` and `DESIGN.md`:
+
+- **Spec first** — features start as `docs/spec-*.md`; `TODO.md` roadmap ordered easiest → hardest
+- **Scaffold the seam** — don't build what v1.0 doesn't need
+- **Thin routes** — logic lives in feature modules (`schema` / `queries` / `form`); screens are compositions
+- **Tokens only** — no hex or pixel values; dark mode and en/es from day one
+- **Every async region** renders loading, error and empty
+- **Native look** — liquid-glass tabs and headers, floating-label forms, inset-grouped lists
+- **Motion** from tokens, transform/opacity only, Reduce Motion respected
+- **Haptics** through named intents with one global toggle
+- **Flows are cancellable**; destructive actions confirm
+- **Kebab-case files**, Biome, pure-logic tests, conventional commits
+- **No analytics or crash reporting**, by design
 
 ## Pipeline
 
