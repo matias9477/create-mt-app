@@ -7,6 +7,7 @@ import {
   type NativeSyntheticEvent,
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   Text,
   useWindowDimensions,
   View,
@@ -39,7 +40,8 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const c = useThemeColors();
   const { width } = useWindowDimensions();
-  const scrollRef = useRef<ScrollView>(null);
+  // ScrollView is a function component since RN 0.88; refs use its exported instance type.
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const [page, setPage] = useState(0);
   const onboardingDone = usePreferencesStore((s) => s.onboardingDone);
   const setOnboardingDone = usePreferencesStore((s) => s.setOnboardingDone);
