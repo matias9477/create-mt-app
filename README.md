@@ -1,6 +1,6 @@
 # create-mt-app
 
-Scaffold an Expo app with my standard stack in one command — always on the **latest** package versions (nothing is pinned in the template; `expo install` resolves SDK-compatible versions at scaffold time), with a rich `CLAUDE.md` so AI-assisted work follows the house conventions from the first prompt.
+Scaffold an Expo app with my standard stack in one command — always on the **latest** Expo SDK (`expo install` resolves SDK-compatible versions at scaffold time; JS libraries get their newest release within the major the template is written against, see `src/steps.ts`), with a rich `CLAUDE.md` so AI-assisted work follows the house conventions from the first prompt.
 
 <p align="center">
   <img src="docs/base-app.png" alt="A freshly scaffolded app: Home's dev-only get-started placeholder under a liquid-glass header and tab bar" width="280">
@@ -71,7 +71,7 @@ Spelled out in the generated `CLAUDE.md` and `DESIGN.md`:
 ## Pipeline
 
 1. Render `template/` into the target dir (token substitution in contents and file names; `__FEATURE__` names the feature module, table, and routes)
-2. `npm install expo@latest`, then `npx expo install` for SDK-managed packages, then `@latest` for pure-JS libraries
+2. `npm install expo@latest`, then `npx expo install` for SDK-managed packages, then pure-JS libraries pinned to the major the template targets (e.g. `zod@^4`, `nativewind@^4`), dev tooling, and Biome at exactly the version in the template's `biome.json` `$schema`
 3. `npx drizzle-kit generate` — initial migration from the schema
 4. Verify: `tsc --noEmit`, `jest`, `biome check` (failures are reported, not hidden)
 5. `git init` + initial commit

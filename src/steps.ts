@@ -1,12 +1,14 @@
 /**
- * Post-scaffold pipeline: dependency installation (latest versions resolved
- * at scaffold time — nothing is pinned in the template), drizzle migration
+ * Post-scaffold pipeline: dependency installation, drizzle migration
  * generation, verification, and git init.
  *
  * Version policy: expo/react-native/native modules go through `npx expo install`
  * so the SDK's compatibility map picks versions (hand-pinning native modules is
- * how you get broken native builds). Pure-JS libraries install at @latest.
+ * how you get broken native builds). Pure-JS libraries install at the newest
+ * release of the major the template's code is written against — a new major
+ * is a deliberate template change, never something a fresh scaffold picks up.
  */
+import { readFileSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { run } from "./run.js";
@@ -54,33 +56,58 @@ const EXPO_DEV_PACKAGES = [
 ];
 
 /**
- * Pure-JS, or native libs outside the Expo SDK map that track RN compatibility
- * themselves (RevenueCat, Pulsar) — always latest.
+ * Pure-JS libraries, pinned to the major the template is written against
+ * (bump deliberately, after checking the template still compiles), plus native
+ * libs outside the Expo SDK map that track RN compatibility themselves
+ * (RevenueCat, Pulsar) — those stay at latest so new RN versions keep working.
  */
-const NPM_LATEST_DEPS = [
-  "drizzle-orm",
-  "zod",
-  "zustand",
-  "i18next",
-  "react-i18next",
-  "react-hook-form",
-  "@hookform/resolvers",
-  "nativewind",
-  "date-fns",
-  "react-native-purchases",
-  "react-native-purchases-ui",
+const NPM_DEPS = [
+  // 1.0 changes the migrations layout the expo migrator + drizzle-kit agree on.
+  "drizzle-orm@<1",
+  "zod@^4",
+  "zustand@^5",
+  "i18next@^26",
+  "react-i18next@^17",
+  "react-hook-form@^7",
+  // 6.0.0 ships an inconsistent optional peer tree (effect@^4 directly, but
+  // @typeschema/effect needs effect@^3) that makes npm fail with ERESOLVE.
+  // 5.9.2 supports zod 4 + RHF ^7.55. Unpin once a 6.x install resolves cleanly
+  // (`npm install @hookform/resolvers@latest` in a scaffolded app).
+  "@hookform/resolvers@^5.9.2",
+  // The template is NativeWind v4 (babel preset + tailwind v3 config); v5 is a migration.
+  "nativewind@^4",
+  "date-fns@^4",
+  "react-native-purchases@latest",
+  "react-native-purchases-ui@latest",
   // Haptics (Software Mansion). Replaces expo-haptics: named rich presets,
   // preloading, a global enable switch, and worklet-callable from Reanimated.
-  "react-native-pulsar",
+  "react-native-pulsar@latest",
 ];
 
-const NPM_LATEST_DEV = [
-  "@biomejs/biome",
-  "drizzle-kit",
-  "tailwindcss@^3",
-  "babel-plugin-inline-import",
+const NPM_DEV_DEPS = [
+  // Must match drizzle-orm's major (`db:generate`).
+  "drizzle-kit@<1",
+  // NativeWind v4 needs tailwind v3 as a direct dependency.
+  "tailwindcss@^3.4.17",
+  // babel.config.js: lets drizzle's `.sql` migrations be imported as strings.
+  "babel-plugin-inline-import@^3",
+  // `npm run release`.
   "@matias9477/expo-release@github:matias9477/expo-release#v1.0.0",
 ];
+
+/**
+ * Biome is pinned exactly to the version in the template's biome.json
+ * `$schema`, so the two can't drift: bump the schema URL and the next
+ * scaffold installs the matching CLI.
+ */
+function biomeVersion(cwd: string): string {
+  const config = JSON.parse(readFileSync(path.join(cwd, "biome.json"), "utf8")) as {
+    $schema?: string;
+  };
+  const version = config.$schema?.match(/schemas\/(\d+\.\d+\.\d+)\//)?.[1];
+  if (!version) throw new Error("template biome.json $schema has no biome version");
+  return version;
+}
 
 export async function installDependencies(cwd: string): Promise<void> {
   // 1. Expo first — it anchors the SDK version everything else resolves against.
@@ -90,11 +117,12 @@ export async function installDependencies(cwd: string): Promise<void> {
   await run("npx", ["expo", "install", ...EXPO_RUNTIME_PACKAGES], { cwd });
   await run("npx", ["expo", "install", ...EXPO_DEV_PACKAGES], { cwd });
   await moveToDevDependencies(cwd, EXPO_DEV_PACKAGES);
-  // 3. Everything else at latest.
-  await run("npm", ["install", ...NPM_LATEST_DEPS.map((p) => `${p}@latest`)], { cwd });
+  // 3. Libraries within their pinned majors, then dev tooling.
+  await run("npm", ["install", ...NPM_DEPS], { cwd });
+  await run("npm", ["install", "--save-dev", ...NPM_DEV_DEPS], { cwd });
   await run(
     "npm",
-    ["install", "--save-dev", ...NPM_LATEST_DEV.map((p) => (p.includes("@", 1) ? p : `${p}@latest`))],
+    ["install", "--save-dev", "--save-exact", `@biomejs/biome@${biomeVersion(cwd)}`],
     { cwd },
   );
 }
