@@ -72,9 +72,14 @@ Spelled out in the generated `CLAUDE.md` and `DESIGN.md`:
 
 1. Render `template/` into the target dir (token substitution in contents and file names; `__FEATURE__` names the feature module, table, and routes)
 2. `npm install expo@latest`, then `npx expo install` for SDK-managed packages, then pure-JS libraries pinned to the major the template targets (e.g. `zod@^4`, `nativewind@^4`), dev tooling, and Biome at exactly the version in the template's `biome.json` `$schema`
-3. `npx drizzle-kit generate` — initial migration from the schema
-4. Verify: `tsc --noEmit`, `jest`, `biome check` (failures are reported, not hidden)
-5. `git init` + initial commit
+3. `npx drizzle-kit generate` — initial migration from the schema (`app/_layout.tsx` imports it)
+4. `biome check --write` — settles formatting/import order that depends on the app and feature names
+5. Verify: `tsc --noEmit`, `jest`, `biome check` (failures are reported, not hidden)
+6. `git init` + initial commit
+
+If an install step fails, the scaffolder stops and prints the remaining commands to finish by hand.
+
+Bumping a pinned major or Biome is a deliberate template change: edit `src/steps.ts` (or the `$schema` URL in `template/biome.json`), scaffold a test app, and check it passes tsc/jest/biome.
 
 ## Development
 

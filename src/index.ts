@@ -32,13 +32,7 @@ import {
   validateBundleId,
   validateFeature,
 } from "./config.js";
-import {
-  generateMigrations,
-  initGit,
-  installDependencies,
-  verify,
-  writeAgentsFile,
-} from "./steps.js";
+import { formatCommand, initGit, runSteps, setupSteps, verify, writeAgentsFile } from "./steps.js";
 import { scaffoldTemplate } from "./template.js";
 
 interface CliFlags {
@@ -237,12 +231,28 @@ async function main(): Promise<void> {
     return;
   }
 
-  p.log.step("Installing dependencies (latest, resolved by expo install)");
-  await installDependencies(config.targetDir);
+  const steps = setupSteps(config.targetDir);
+  const failedAt = await runSteps(config.targetDir, steps, (step) => p.log.step(step.label));
+  // Before bailing too: it only needs expo in node_modules, else keeps the fallback.
   await writeAgentsFile(config.targetDir);
 
-  p.log.step("Generating initial Drizzle migration");
-  await generateMigrations(config.targetDir);
+  if (failedAt !== undefined) {
+    const remaining = steps.slice(failedAt);
+    p.log.error(`Step failed: ${remaining[0]?.label ?? "unknown"}`);
+    // Plain log, not p.note: a note box pads every line to the longest command.
+    p.log.message(
+      [
+        "Files are written. Fix the failing command, then finish setup by hand:",
+        "",
+        `cd ${config.targetDir}`,
+        ...remaining.map(formatCommand),
+        "npx tsc --noEmit && npx jest && npx biome check .",
+        ...(flags.skipGit ? [] : ['git init && git add -A && git commit -m "feat: scaffold"']),
+      ].join("\n"),
+    );
+    p.outro(pc.red(`${config.appName} is only partly set up — see the commands above.`));
+    process.exit(1);
+  }
 
   p.log.step("Verifying (tsc, jest, biome)");
   const result = await verify(config.targetDir);
