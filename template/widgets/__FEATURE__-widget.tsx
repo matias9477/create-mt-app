@@ -1,5 +1,12 @@
 import { Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { containerBackground, font, foregroundStyle, lineLimit, padding, widgetURL } from "@expo/ui/swift-ui/modifiers";
+import {
+  containerBackground,
+  font,
+  foregroundStyle,
+  lineLimit,
+  padding,
+  widgetURL,
+} from "@expo/ui/swift-ui/modifiers";
 import { createWidget, type WidgetEnvironment } from "expo-widgets";
 
 export type __FEATURE_PASCAL__WidgetProps = {
@@ -55,7 +62,11 @@ const __FEATURE_PASCAL__WidgetComponent = (
       modifiers={[widgetURL("__SLUG__://"), containerBackground(theme.card, "widget")]}
     >
       <Text
-        modifiers={[font({ size: 10, weight: "semibold" }), foregroundStyle(theme.accent), lineLimit(1)]}
+        modifiers={[
+          font({ size: 10, weight: "semibold" }),
+          foregroundStyle(theme.accent),
+          lineLimit(1),
+        ]}
       >
         {props.subtitle}
       </Text>

@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { create__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { __FEATURE_PASCAL__Form } from "@/src/features/__FEATURE__/__FEATURE__-form";
+import { create__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
 import { haptics } from "@/src/features/haptics/haptics";
 import { Screen } from "@/src/ui/screen";
 

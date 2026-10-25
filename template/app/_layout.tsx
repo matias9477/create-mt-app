@@ -5,9 +5,9 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useTranslation } from "react-i18next";
 import migrations from "@/drizzle/migrations";
 import { db } from "@/src/db/client";
 import { initializeAds } from "@/src/features/ads/ads-service";
@@ -18,8 +18,8 @@ import { ThemeSync } from "@/src/features/theme/theme-sync";
 import { WidgetSync } from "@/src/features/widgets/widget-sync";
 import { usePreferencesHydrated } from "@/src/stores/preferences";
 import { ErrorBoundary } from "@/src/ui/error-boundary";
-import { ThemeRoot } from "@/src/ui/theme-root";
 import { useThemeColors } from "@/src/ui/theme-colors";
+import { ThemeRoot } from "@/src/ui/theme-root";
 
 function RootStack() {
   const { t } = useTranslation();
@@ -43,10 +43,7 @@ function RootStack() {
         options={{ presentation: "modal", title: t("home.new") }}
       />
       <Stack.Screen name="__FEATURE__/[id]" options={{ title: "" }} />
-      <Stack.Screen
-        name="paywall"
-        options={{ presentation: "modal", title: t("paywall.title") }}
-      />
+      <Stack.Screen name="paywall" options={{ presentation: "modal", title: t("paywall.title") }} />
     </Stack>
   );
 }

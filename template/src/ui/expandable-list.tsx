@@ -30,7 +30,9 @@ export function ExpandableList<T>({ items, initialCount = 5, renderItem }: Expan
           className="items-center py-3 active:opacity-70"
         >
           <Text className="text-sm font-semibold text-accent-fg">
-            {expanded ? t("common.viewLess") : t("common.viewMore", { count: items.length - initialCount })}
+            {expanded
+              ? t("common.viewLess")
+              : t("common.viewMore", { count: items.length - initialCount })}
           </Text>
         </Pressable>
       ) : null}

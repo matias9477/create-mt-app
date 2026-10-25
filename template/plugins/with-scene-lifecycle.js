@@ -12,8 +12,8 @@
  *   the ExpoAppDelegate (which fans them out to Expo's subscribers).
  * - AppDelegate.swift: stops creating its own window; the scene does it.
  */
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const {
   IOSConfig,
   withAppDelegate,

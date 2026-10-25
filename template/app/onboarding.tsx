@@ -76,7 +76,11 @@ export default function OnboardingScreen() {
     <SafeAreaView className="flex-1 bg-surface-page">
       <View className="flex-row items-center justify-between px-6 pt-2">
         <Text className="text-base font-semibold text-text-primary">__APP_NAME__</Text>
-        <Pressable onPress={() => finish(false)} hitSlop={8} className="px-2 py-1 active:opacity-60">
+        <Pressable
+          onPress={() => finish(false)}
+          hitSlop={8}
+          className="px-2 py-1 active:opacity-60"
+        >
           <Text className="text-sm font-semibold text-text-tertiary">{t("onboarding.skip")}</Text>
         </Pressable>
       </View>

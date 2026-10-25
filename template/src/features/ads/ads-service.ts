@@ -19,9 +19,7 @@ export const ADS_ENABLED = Boolean(PROD_BANNER_AD_UNIT_ID);
  * Dev builds always serve Google's test unit — clicking real ads on a
  * development device risks an AdMob account ban.
  */
-export const BANNER_AD_UNIT_ID = __DEV__
-  ? TestIds.ADAPTIVE_BANNER
-  : (PROD_BANNER_AD_UNIT_ID ?? "");
+export const BANNER_AD_UNIT_ID = __DEV__ ? TestIds.ADAPTIVE_BANNER : (PROD_BANNER_AD_UNIT_ID ?? "");
 
 let initialized = false;
 

@@ -1,12 +1,12 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
+import { __FEATURE_PASCAL__Form } from "@/src/features/__FEATURE__/__FEATURE__-form";
 import {
   delete__FEATURE_PASCAL__,
   update__FEATURE_PASCAL__,
   use__FEATURE_PASCAL__ById,
 } from "@/src/features/__FEATURE__/queries";
-import { __FEATURE_PASCAL__Form } from "@/src/features/__FEATURE__/__FEATURE__-form";
 import { haptics } from "@/src/features/haptics/haptics";
 import { Button } from "@/src/ui/button";
 import { Screen } from "@/src/ui/screen";

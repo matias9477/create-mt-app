@@ -9,12 +9,8 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 /** Shared columns mixed into every table. */
 const timestamps = {
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text("updated_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 };
 
 export const __FEATURE__ = sqliteTable("__FEATURE__", {

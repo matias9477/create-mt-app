@@ -2,8 +2,8 @@ import { Link, Stack, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
-import { AdBanner } from "@/src/features/ads/ad-banner";
 import { useAll__FEATURE_PASCAL__ } from "@/src/features/__FEATURE__/queries";
+import { AdBanner } from "@/src/features/ads/ad-banner";
 import { ListRow } from "@/src/ui/list-row";
 import { DURATION } from "@/src/ui/motion";
 import { Screen } from "@/src/ui/screen";
@@ -57,7 +57,10 @@ export default function HomeScreen() {
                 index === (data?.length ?? 0) - 1 ? "rounded-b-2xl" : ""
               }`}
             >
-              <Link href={{ pathname: "/__FEATURE__/[id]", params: { id: String(item.id) } }} asChild>
+              <Link
+                href={{ pathname: "/__FEATURE__/[id]", params: { id: String(item.id) } }}
+                asChild
+              >
                 <ListRow title={item.title} subtitle={item.notes ?? undefined} onPress={() => {}} />
               </Link>
             </View>

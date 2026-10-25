@@ -5,9 +5,9 @@ import { View } from "react-native";
 import { Button } from "@/src/ui/button";
 import { Field } from "@/src/ui/field";
 import {
+  __FEATURE__Input,
   type __FEATURE_PASCAL__FormIn,
   type __FEATURE_PASCAL__FormOut,
-  __FEATURE__Input,
 } from "./schema";
 
 interface __FEATURE_PASCAL__FormProps {
