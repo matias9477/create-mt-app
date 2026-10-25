@@ -22,10 +22,10 @@ import { fileURLToPath } from "node:url";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
 import {
-  DEFAULTS,
-  type ProjectConfig,
   buildTokens,
+  DEFAULTS,
   normalizeFeature,
+  type ProjectConfig,
   slugify,
   toPascal,
   validateAccent,
@@ -252,7 +252,9 @@ async function main(): Promise<void> {
 
   if (!flags.skipGit) {
     const committed = await initGit(config.targetDir, config.appName);
-    p.log.info(committed ? "git repository initialized" : pc.yellow("git init/commit failed (skipped)"));
+    p.log.info(
+      committed ? "git repository initialized" : pc.yellow("git init/commit failed (skipped)"),
+    );
   }
 
   const allPassed = result.typecheck && result.tests && result.lint;

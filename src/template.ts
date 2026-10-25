@@ -16,7 +16,16 @@ const SPECIAL_RENAMES: Record<string, string> = {
   "_env.example": ".env.example",
 };
 
-const BINARY_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".ttf", ".otf"]);
+const BINARY_EXTENSIONS = new Set([
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".ico",
+  ".ttf",
+  ".otf",
+]);
 
 function renderName(name: string, tokens: Record<string, string>): string {
   const special = SPECIAL_RENAMES[name];
