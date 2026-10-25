@@ -8,11 +8,16 @@ Scaffold an Expo app with my standard stack in one command — always on the **l
 
 ## Usage
 
+Run straight from GitHub (not published to npm; `prepare` builds `dist/` on install):
+
 ```bash
-npm create mt-app                  # interactive
-npm create mt-app -- "My App" --yes
-node dist/index.js "My App" --yes  # from a local checkout
+npx github:matias9477/create-mt-app                   # interactive
+npx github:matias9477/create-mt-app "My App" --yes
+npx github:matias9477/create-mt-app#master "My App"   # pin a branch/commit/tag
+node dist/index.js "My App" --yes                     # from a local checkout
 ```
+
+npx scaffolds from what's pushed, not your working tree — push template changes first. If an old version runs, clear the cache with `npx clear-npx-cache`.
 
 | Flag | Meaning |
 |---|---|
