@@ -95,7 +95,7 @@ const NPM_DEV_DEPS = [
   // babel.config.js: lets drizzle's `.sql` migrations be imported as strings.
   "babel-plugin-inline-import@^3",
   // `npm run release`.
-  "@matias9477/expo-release@github:matias9477/expo-release#v1.0.0",
+  "@matias9477/expo-release@github:matias9477/expo-release#v1.3.0",
 ];
 
 export interface Step {
